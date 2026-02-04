@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Vegist Premium Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-orange: #fb8500;
+            --sky-blue: #00b4d8;
+            --deep-red: #d62828;
+            --dark-navy: #011627;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background-color: #fff; color: #333; }
+
+        /* --- TOP BAR --- */
+        .top-bar { padding: 15px 0; border-bottom: 1px solid #f1f1f1; background: #fff; }
+        .vegist-logo { font-size: 32px; font-weight: 800; color: #222; text-decoration: none; }
+        .vegist-logo span { color: var(--deep-red); }
+        .contact-box { font-size: 13px; color: #333; line-height: 1.2; }
+        .contact-box i { color: var(--deep-red); font-size: 20px; margin-right: 8px; }
+
+        /* --- NAVBAR --- */
+        .navbar { background: #fff; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .nav-link { color: #000 !important; font-weight: 700; font-size: 13px; text-transform: uppercase; padding: 5px 15px !important; transition: 0.3s; }
+        .nav-link:hover { color: var(--deep-red) !important; }
+        .nav-link.active { color: var(--deep-red) !important; }
+
+        /* --- CONTACT CONTENT --- */
+        .contact-header { background: #f8f9fa; padding: 60px 0; text-align: center; }
+        .contact-header h1 { font-size: 40px; font-weight: 800; color: var(--dark-navy); }
+
+        .contact-wrapper { padding: 80px 0; }
+        .info-card { padding: 30px; border-radius: 12px; background: #fff; border: 1px solid #eee; height: 100%; transition: 0.3s; }
+        .info-card:hover { border-color: var(--sky-blue); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .info-icon { width: 50px; height: 50px; background: rgba(0, 180, 216, 0.1); color: var(--sky-blue); display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 20px; margin-bottom: 20px; }
+        
+        .contact-form-box { background: #fff; padding: 40px; border-radius: 15px; border: 1px solid #eee; box-shadow: 0 5px 20px rgba(0,0,0,0.02); }
+        .form-label { font-weight: 600; font-size: 14px; color: #555; }
+        .form-control { padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 14px; }
+        .form-control:focus { border-color: var(--sky-blue); box-shadow: none; }
+        .btn-send { background: var(--primary-orange); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-weight: 700; text-transform: uppercase; transition: 0.3s; width: 100%; }
+        .btn-send:hover { background: #e67e00; transform: translateY(-2px); }
+
+        /* --- FOOTER (EXACT MATCH) --- */
+        footer { background: var(--dark-navy); color: #fff; padding: 80px 0 20px; margin-top: 50px; }
+        .footer-brand { font-size: 28px; font-weight: 800; color: #fff; text-decoration: none; }
+        .footer-brand span { color: var(--sky-blue); }
+        .footer-heading { font-weight: 700; font-size: 18px; margin-bottom: 25px; }
+        .footer-link { display: block; color: #adb5bd; text-decoration: none; font-size: 14px; margin-bottom: 12px; transition: 0.3s; }
+        .footer-link:hover { color: var(--sky-blue); padding-left: 5px; }
+        
+        .social-links a { width: 40px; height: 40px; background: rgba(255,255,255,0.1); color: #fff; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 12px; transition: 0.4s; text-decoration: none; }
+        .social-links a:hover { background: var(--sky-blue); transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0, 180, 216, 0.4); }
+
+        .newsletter-wrapper { display: flex; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .news-input { background: transparent; border: none; color: #fff; padding: 10px 15px; width: 100%; outline: none; }
+        .news-btn { background: var(--sky-blue); color: #fff; border: none; padding: 10px 25px; border-radius: 6px; font-weight: 700; }
+
+        .wa-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="index.html" class="vegist-logo">Deco<span>Tech</span></a>
+            <div class="d-flex gap-5">
+                <div class="contact-box d-flex align-items-center"><i class="fa-solid fa-headset"></i><div>Call now:<br><strong>+2800 0500 2600</strong></div></div>
+                <div class="contact-box d-flex align-items-center"><i class="fa-solid fa-envelope-open"></i><div>Email now:<br><strong>info@gmail.com</strong></div></div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+        <div class="container">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="decor.html">Decor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gadgets.html">Gadgets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Elias</a></li>
+                </ul>
+            </div>
+            <div class="d-flex gap-4 fs-5 align-items-center">
+                <i class="fa-regular fa-user"></i>
+                <i class="fa-solid fa-bag-shopping" style="color: var(--primary-orange);"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="contact-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p class="text-muted">We are here to help you 24/7 across Bangladesh</p>
+        </div>
+    </div>
+
+    <section class="contact-wrapper">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="info-card">
+                                <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                                <h5>Our Office</h5>
+                                <p class="text-muted mb-0">House #12, Road #05, Dhanmondi, Dhaka, Bangladesh</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="info-card">
+                                <div class="info-icon"><i class="fa-solid fa-phone-volume"></i></div>
+                                <h5>Phone Number</h5>
+                                <p class="text-muted mb-0">+880 1700 000000<br>+880 1800 000000</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="info-card">
+                                <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+                                <h5>Email Address</h5>
+                                <p class="text-muted mb-0">support@vegist.com<br>info@decotech.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="contact-form-box">
+                        <h3 class="fw-bold mb-4">Send Us a Message</h3>
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Your Name</label>
+                                <input type="text" class="form-control" placeholder="Enter Full Name">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" placeholder="Enter Email">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Subject</label>
+                                <input type="text" class="form-control" placeholder="What is this about?">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control" rows="5" placeholder="Write your message here..."></textarea>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn-send">Send Message</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid p-0">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d116833.83187895225!2d90.33728815147424!3d23.780887456950284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b087026b81%3A0x8fa563bbddd590d!2sDhaka!5e0!3m2!1sen!2sbd!4v1700000000000!5m2!1sen!2sbd" width="100%" height="400" style="border:0; filter: grayscale(100%);" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <a href="#" class="footer-brand">Deco<span>Tech</span></a>
+                    <p class="text-secondary mt-3 pe-lg-5">Your trusted partner for premium gadgets and modern home decor across Bangladesh.</p>
+                    <div class="social-links mt-4">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h5 class="footer-heading">Shop</h5>
+                    <a href="#" class="footer-link">Smart Gadgets</a>
+                    <a href="#" class="footer-link">Home Decor</a>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h5 class="footer-heading">Support</h5>
+                    <a href="#" class="footer-link">About Us</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="footer-heading">Newsletter</h5>
+                    <div class="newsletter-wrapper">
+                        <input type="email" class="news-input" placeholder="Your Email">
+                        <button class="news-btn">JOIN</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 border-secondary opacity-25">
+            <p class="text-center small text-secondary mb-0">© 2026 DecoTech Premium Store. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <a href="#" class="wa-float"><i class="fab fa-whatsapp"></i></a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

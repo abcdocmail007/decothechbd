@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Vegist Premium Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-orange: #fb8500;
+            --sky-blue: #00b4d8;
+            --deep-red: #d62828;
+            --dark-navy: #011627;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f7f9; color: #333; }
+
+        /* --- TOP BAR --- */
+        .top-bar { padding: 15px 0; border-bottom: 1px solid #f1f1f1; background: #fff; }
+        .vegist-logo { font-size: 32px; font-weight: 800; color: #222; text-decoration: none; }
+        .vegist-logo span { color: var(--deep-red); }
+        .search-group { display: flex; max-width: 450px; width: 100%; }
+        .search-input { border: 1px solid #ddd; padding: 10px 20px; width: 100%; border-radius: 4px 0 0 4px; outline: none; }
+        .search-btn { background: var(--primary-orange); border: none; color: white; padding: 0 20px; border-radius: 0 4px 4px 0; }
+        .contact-box { font-size: 13px; color: #333; line-height: 1.2; }
+        .contact-box i { color: var(--deep-red); font-size: 20px; margin-right: 8px; }
+
+        /* --- NAVBAR --- */
+        .navbar { background: #fff; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .nav-link { color: #000 !important; font-weight: 700; font-size: 13px; text-transform: uppercase; padding: 5px 15px !important; transition: 0.3s; }
+        .nav-link:hover { color: var(--deep-red) !important; }
+
+        /* --- CHECKOUT BOXES --- */
+        .checkout-box { background: white; border-radius: 12px; border: 1px solid #e1e8ed; padding: 35px; margin-bottom: 30px; }
+        .section-title { font-weight: 800; font-size: 18px; text-transform: uppercase; border-left: 5px solid var(--primary-orange); padding-left: 15px; margin-bottom: 25px; }
+        .form-label { font-weight: 600; font-size: 13px; color: #555; }
+        .form-control, .form-select { padding: 13px; border-radius: 6px; border: 1px solid #ced4da; font-size: 14px; }
+
+        /* Payment */
+        .payment-option { border: 1px solid #f1f1f1; border-radius: 10px; padding: 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.2s; }
+        .payment-option:hover { background: #fcfcfc; border-color: #ddd; }
+        .payment-option input { width: 18px; height: 18px; margin-right: 12px; accent-color: var(--sky-blue); }
+        .pay-icon { height: 25px; }
+
+        /* Summary */
+        .summary-card { background: var(--dark-navy); color: white; border-radius: 15px; padding: 35px; position: sticky; top: 110px; }
+        .btn-place { background: var(--primary-orange); color: white; border: none; width: 100%; padding: 16px; border-radius: 8px; font-weight: 700; font-size: 16px; text-transform: uppercase; margin-top: 25px; }
+        .btn-place:hover { background: #e67e00; transform: translateY(-2px); transition: 0.3s; }
+
+        /* --- EXACT FOOTER FROM IMAGE --- */
+        footer { background: var(--dark-navy); color: #fff; padding: 80px 0 30px; margin-top: 60px; }
+        .footer-brand { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 20px; display: block; text-decoration: none; }
+        .footer-brand span { color: var(--sky-blue); }
+        .footer-text { color: #adb5bd; font-size: 14px; line-height: 1.8; margin-bottom: 25px; }
+        .footer-heading { font-weight: 700; font-size: 18px; margin-bottom: 25px; color: #fff; }
+        .footer-link { display: block; color: #adb5bd; text-decoration: none; font-size: 14px; margin-bottom: 12px; transition: 0.3s; }
+        .footer-link:hover { color: var(--sky-blue); padding-left: 5px; }
+        
+        /* Newsletter */
+        .newsletter-box { display: flex; gap: 0; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .news-input { background: transparent; border: none; color: #fff; padding: 10px 15px; width: 100%; outline: none; }
+        .news-btn { background: var(--sky-blue); color: #fff; border: none; padding: 10px 25px; border-radius: 6px; font-weight: 700; }
+
+        /* Social Icons */
+        .social-links a { width: 42px; height: 42px; background: rgba(255,255,255,0.08); color: #fff; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 12px; transition: 0.3s; text-decoration: none; }
+        .social-links a:hover { background: var(--sky-blue); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 180, 216, 0.3); }
+
+        .wa-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="#" class="vegist-logo">Deco<span>Tech</span></a>
+            <div class="search-group d-none d-lg-flex">
+                <input type="text" class="search-input" placeholder="Search our store">
+                <button class="search-btn"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="d-flex gap-4">
+                <div class="contact-box d-flex align-items-center">
+                    <i class="fa-solid fa-headset"></i>
+                    <div>Call now:<br><strong>+2800 0500 2600</strong></div>
+                </div>
+                <div class="contact-box d-flex align-items-center">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    <div>Email now:<br><strong>info@gmail.com</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="decor.html">Decor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gadgets.html">Gadgets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="clothing.html">Clothing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Elias</a></li>
+                </ul>
+            </div>
+            <div class="d-flex gap-4 fs-5 align-items-center">
+                <i class="fa-regular fa-user cursor-pointer"></i>
+                <i class="fa-regular fa-heart cursor-pointer"></i>
+                <i class="fa-solid fa-shopping-bag cursor-pointer" style="color: var(--primary-orange);"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="checkout-box">
+                    <h4 class="section-title">Shipping Details</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" placeholder="Enter Name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone *</label>
+                            <input type="text" class="form-control" placeholder="017XXXXXXXX">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">District *</label>
+                            <select id="district" class="form-select" onchange="loadThanas()">
+                                <option value="" selected disabled>Select District</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Thana *</label>
+                            <select id="thana" class="form-select">
+                                <option value="" selected disabled>Select Thana</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Full Address *</label>
+                            <textarea class="form-control" rows="3" placeholder="Village/Road/House"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-box">
+                    <h4 class="section-title">Payment Method</h4>
+                    <label class="payment-option" for="cod">
+                        <span><input type="radio" name="pay" id="cod" checked> <b>Cash on Delivery</b></span>
+                        <i class="fa-solid fa-truck-moving fs-4 text-muted"></i>
+                    </label>
+                    <label class="payment-option" for="bkash">
+                        <span><input type="radio" name="pay" id="bkash"> <b>bKash</b></span>
+                        <img src="https://pathao.com/wp-content/uploads/2019/03/bkash-logo.png" class="pay-icon">
+                    </label>
+                    <label class="payment-option" for="nagad">
+                        <span><input type="radio" name="pay" id="nagad"> <b>Nagad</b></span>
+                        <img src="https://freepnglogo.com/images/all_img/1707315112nagad-logo-png.png" class="pay-icon">
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h2 class="fw-bold mb-4">Summary</h2>
+                    <div class="d-flex justify-content-between mb-3 text-light"><span>Total Amount</span><span>€145.00</span></div>
+                    <div class="d-flex justify-content-between mb-3 text-light"><span>Delivery</span><span class="text-success">Free</span></div>
+                    <hr class="bg-secondary">
+                    <div class="d-flex justify-content-between fw-bold fs-3"><span>Total</span><span>€145.00</span></div>
+                    <button class="btn-place">PLACE ORDER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <a href="#" class="footer-brand">Deco<span>Tech</span></a>
+                    <p class="footer-text">Premium gadgets and home decor for your modern lifestyle. Quality guaranteed since 2026.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h5 class="footer-head">Quick Menu</h5>
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="shop.html" class="footer-link">Shop</a>
+                    <a href="decor.html" class="footer-link">Decor</a>
+                    <a href="gadgets.html" class="footer-link">Gadgets</a>
+                    <a href="clothing.html" class="footer-link">Clothing</a>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h5 class="footer-heading">Support</h5>
+                      <a href="#" class="footer-link">Contact Us</a>
+                    <a href="#" class="footer-link">About Elias</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Shipping Info</a>
+                    <a href="#" class="footer-link">Admin Login</a>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="footer-heading">Newsletter</h5>
+                    <div class="newsletter-box">
+                        <input type="email" class="news-input" placeholder="Your Email">
+                        <button class="news-btn">JOIN</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 border-secondary opacity-25">
+            <p class="text-center small text-secondary mb-0">© 2026 DecoTech Premium Store. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <a href="#" class="wa-float"><i class="fab fa-whatsapp"></i></a>
+
+    <script>
+        const districtSelect = document.getElementById('district');
+        const thanaSelect = document.getElementById('thana');
+
+        // Fetch Districts
+        fetch('https://bdapis.com/api/v1.2/districts')
+        .then(res => res.json())
+        .then(data => {
+            data.data.sort((a, b) => a.district.localeCompare(b.district));
+            data.data.forEach(d => {
+                let opt = document.createElement('option');
+                opt.value = d.district;
+                opt.textContent = d.district;
+                districtSelect.appendChild(opt);
+            });
+        });
+
+        // Load Upazilas/Thanas
+        function loadThanas() {
+            const district = districtSelect.value;
+            thanaSelect.innerHTML = '<option selected disabled>Loading...</option>';
+            
+            fetch(`https://bdapis.com/api/v1.2/district/${district}`)
+            .then(res => res.json())
+            .then(data => {
+                thanaSelect.innerHTML = '<option selected disabled>Select Thana</option>';
+                data.data[0].upazilas.sort().forEach(u => {
+                    let opt = document.createElement('option');
+                    opt.value = u;
+                    opt.textContent = u;
+                    thanaSelect.appendChild(opt);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

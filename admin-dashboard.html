@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DecoTech Admin | Final Premium Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sidebar-navy: #011627;
+            --sky-blue: #00b4d8;
+            --accent-orange: #fb8500;
+            --bg-body: #f0f4f8;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-body); margin: 0; display: flex; }
+
+        /* Sidebar Style */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: var(--sidebar-navy);
+            color: white;
+            position: fixed;
+            left: 0; top: 0;
+            padding: 20px 0;
+            transition: 0.3s;
+        }
+        .sidebar-brand { padding: 0 25px 30px; font-size: 24px; font-weight: 800; }
+        .sidebar-brand span { color: var(--sky-blue); }
+        .nav-link-item { 
+            padding: 15px 25px; display: flex; align-items: center; 
+            color: #adb5bd; text-decoration: none; font-size: 14px; transition: 0.3s;
+        }
+        .nav-link-item i { width: 25px; font-size: 18px; margin-right: 10px; }
+        .nav-link-item:hover, .nav-link-item.active { 
+            color: var(--sky-blue); background: rgba(255,255,255,0.05); 
+            border-left: 4px solid var(--sky-blue); 
+        }
+
+        /* Main Content */
+        .main-wrapper { margin-left: 260px; width: calc(100% - 260px); padding: 30px; transition: 0.3s; }
+
+        /* Header Card */
+        .header-section {
+            background: white; border-radius: 15px; padding: 20px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: var(--card-shadow); margin-bottom: 30px;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: white; border-radius: 20px; padding: 25px; border: none;
+            box-shadow: var(--card-shadow); height: 100%;
+        }
+        .icon-circle {
+            width: 45px; height: 45px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin-bottom: 15px;
+        }
+        .bg-blue-light { background: rgba(0, 180, 216, 0.1); color: var(--sky-blue); }
+        .bg-orange-light { background: rgba(251, 133, 0, 0.1); color: var(--accent-orange); }
+
+        /* Chart & Table Boxes */
+        .content-box {
+            background: white; border-radius: 20px; padding: 25px;
+            box-shadow: var(--card-shadow); margin-bottom: 30px;
+        }
+
+        .btn-add-new {
+            background: var(--sidebar-navy); color: white; border: none;
+            padding: 10px 20px; border-radius: 8px; font-weight: 600;
+        }
+        .btn-add-new:hover { background: var(--sky-blue); }
+
+        .status-pill { padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 600; }
+        .delivered { background: #dcfce7; color: #166534; }
+        .pending { background: #fef3c7; color: #92400e; }
+
+        @media (max-width: 992px) {
+            .sidebar { width: 80px; }
+            .sidebar span, .sidebar-brand span { display: none; }
+            .main-wrapper { margin-left: 80px; width: calc(100% - 80px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-brand">Deco<span>Tech</span></div>
+        <nav class="mt-4">
+            <a href="#" class="nav-link-item active"><i class="fa fa-th-large"></i> <span>Dashboard</span></a>
+            <a href="#" class="nav-link-item"><i class="fa fa-box"></i> <span>Products</span></a>
+            <a href="#" class="nav-link-item"><i class="fa fa-shopping-cart"></i> <span>Orders</span></a>
+            <a href="#" class="nav-link-item"><i class="fa fa-users"></i> <span>Customers</span></a>
+            <a href="#" class="nav-link-item"><i class="fa fa-cog"></i> <span>Settings</span></a>
+            <a href="#" class="nav-link-item mt-5 text-danger"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
+        </nav>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="header-section">
+            <h5 class="fw-bold m-0">Admin Dashboard Overview</h5>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn-add-new" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                    <i class="fa fa-plus me-2"></i> Add Product
+                </button>
+                <div class="text-end d-none d-md-block">
+                    <p class="m-0 fw-bold small">Elias Ahmed</p>
+                    <small class="text-muted" style="font-size: 11px;">Super Admin</small>
+                </div>
+                <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center fw-bold" style="width: 42px; height: 42px;">EA</div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="icon-circle bg-blue-light"><i class="fa fa-euro-sign"></i></div>
+                    <p class="text-muted small mb-1">Total Sales</p>
+                    <h4 class="fw-bold">€24,500</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="icon-circle bg-orange-light"><i class="fa fa-shopping-bag"></i></div>
+                    <p class="text-muted small mb-1">Total Orders</p>
+                    <h4 class="fw-bold">1,240</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="icon-circle bg-blue-light"><i class="fa fa-users"></i></div>
+                    <p class="text-muted small mb-1">New Customers</p>
+                    <h4 class="fw-bold">342</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="icon-circle bg-orange-light"><i class="fa fa-boxes"></i></div>
+                    <p class="text-muted small mb-1">Pending Stock</p>
+                    <h4 class="fw-bold">12</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="content-box">
+                    <h6 class="fw-bold mb-4">Revenue Growth (Weekly)</h6>
+                    <div style="height: 300px;"><canvas id="revenueChart"></canvas></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="content-box">
+                    <h6 class="fw-bold mb-4">Order Status</h6>
+                    <div style="height: 300px;"><canvas id="statusChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-box">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h6 class="fw-bold m-0">Recent Orders</h6>
+                <button class="btn btn-sm btn-dark px-3">View All</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr style="font-size: 13px;">
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Product</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-semibold">#DT-5011</td>
+                            <td>Karim Khan</td>
+                            <td>Smart LED Lamp</td>
+                            <td class="fw-bold">€45.00</td>
+                            <td><span class="status-pill delivered">Delivered</span></td>
+                            <td><button class="btn btn-sm btn-light border"><i class="fa fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-semibold">#DT-5012</td>
+                            <td>Sufia Begum</td>
+                            <td>Modern Vase Blue</td>
+                            <td class="fw-bold">€12.00</td>
+                            <td><span class="status-pill pending">Pending</span></td>
+                            <td><button class="btn btn-sm btn-light border"><i class="fa fa-eye"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none;">
+                <div class="modal-header border-0 p-4">
+                    <h5 class="fw-bold m-0">Add New Product to Store</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-0">
+                    <form id="productForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Product Name</label>
+                                <input type="text" class="form-control" placeholder="Enter product name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Category</label>
+                                <select class="form-select">
+                                    <option>Decor</option>
+                                    <option>Gadgets</option>
+                                    <option>Clothing</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">Price (€)</label>
+                                <input type="number" class="form-control" placeholder="0.00" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">Stock Quantity</label>
+                                <input type="number" class="form-control" placeholder="Quantity" value="10">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">Discount (%)</label>
+                                <input type="number" class="form-control" placeholder="0">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label small fw-bold text-muted">Product Image</label>
+                                <input type="file" class="form-control">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label small fw-bold text-muted">Description</label>
+                                <textarea class="form-control" rows="3" placeholder="Tell more about the product..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-add-new rounded-pill px-4" onclick="saveProduct()">Save Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Line Chart (Revenue Growth)
+        const lineCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [1500, 2100, 1800, 3200, 2800, 4100, 4800],
+                    borderColor: '#00b4d8',
+                    backgroundColor: 'rgba(0, 180, 216, 0.1)',
+                    fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        // Pie/Doughnut Chart (Order Status)
+        const pieCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Delivered', 'Pending', 'Cancelled'],
+                datasets: [{
+                    data: [70, 20, 10],
+                    backgroundColor: ['#00b4d8', '#fb8500', '#ef4444'],
+                    borderWidth: 0, hoverOffset: 10
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '70%' }
+        });
+
+        function saveProduct() {
+            alert("Success: Product has been added to the database!");
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+            modal.hide();
+        }
+    </script>
+</body>
+</html>

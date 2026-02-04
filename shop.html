@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | DecoTech Premium Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-orange: #fb8500;
+            --sky-blue: #00b4d8;
+            --deep-red: #d62828;
+            --dark-navy: #011627;
+        }
+
+        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; background-color: #fff; }
+
+        /* --- EXACT HOME NAVBAR STYLE --- */
+        .top-bar { padding: 15px 0; border-bottom: 1px solid #f1f1f1; background: #fff; }
+        .search-group { display: flex; max-width: 450px; width: 100%; position: relative; }
+        .search-input { border: 1px solid #ddd; padding: 10px 20px; width: 100%; border-radius: 4px 0 0 4px; outline: none; }
+        .search-btn { background: var(--primary-orange); border: none; color: white; padding: 0 20px; border-radius: 0 4px 4px 0; transition: 0.3s; }
+        .search-btn:hover { background: var(--deep-red); }
+        .contact-info { font-size: 12px; color: #333; }
+        .contact-info i { color: var(--deep-red); font-size: 16px; margin-right: 8px; }
+
+        .navbar { background: #fff; padding: 15px 0; }
+        .nav-link { 
+            color: #000 !important; font-weight: 700; font-size: 11px; 
+            text-transform: uppercase; letter-spacing: 1px; padding: 5px 15px !important; transition: 0.3s;
+        }
+        .nav-link:hover { color: var(--deep-red) !important; }
+
+        /* --- SHOP SPECIFIC STYLES --- */
+        .shop-header {
+            background-image: url(img/shop-page.png);
+            background-position: center;
+            background-size: cover;
+            padding: 60px 0;
+            border-bottom-left-radius: 80px;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        /* Filter Tabs */
+        .filter-btn {
+            border: 1px solid #ddd; background: #fff; color: #444;
+            padding: 8px 20px; border-radius: 5px; font-weight: 600; font-size: 13px;
+            margin: 5px; transition: 0.3s; text-transform: uppercase;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--sky-blue); color: white; border-color: var(--sky-blue);
+        }
+
+        /* --- EXACT HOME PRODUCT CARD STYLE --- */
+        .product-card { transition: 0.3s; border: none; margin-bottom: 20px; }
+        .img-container { 
+            background: #f9f9f9; border-radius: 10px; padding: 40px 20px; 
+            position: relative; overflow: hidden; transition: 0.3s; 
+        }
+        .product-card:hover .img-container { background: #f1f1f1; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .badge-sale { position: absolute; top: 15px; left: 15px; background: var(--deep-red); color: white; font-size: 10px; padding: 3px 8px; border-radius: 3px; font-weight: bold; }
+        
+        .product-actions { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+            display: flex; gap: 8px; opacity: 0; transition: 0.4s; z-index: 5;
+        }
+        .product-card:hover .product-actions { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .p-action-icon { background: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s; }
+        .p-action-icon:hover { background: var(--sky-blue); color: white; }
+
+        .product-info { padding: 15px 0; text-align: left; }
+        .product-info h6 { font-size: 13px; color: #777; margin-bottom: 5px; }
+        .price { color: var(--sky-blue); font-weight: 800; font-size: 15px; }
+        .rating { color: #ffb703; font-size: 11px; margin-top: 5px; }
+
+        /* --- EXACT HOME FOOTER STYLE --- */
+        footer { background: var(--dark-navy); color: #fff; padding: 80px 0 20px; }
+        .footer-logo { font-size: 30px; font-weight: 800; margin-bottom: 25px; }
+        .footer-logo span { color: var(--sky-blue); }
+        .footer-desc { color: #adb5bd; font-size: 13px; line-height: 1.8; padding-right: 40px; }
+        .footer-head { font-weight: 700; font-size: 16px; margin-bottom: 30px; }
+        .footer-link { display: block; color: #adb5bd; text-decoration: none; font-size: 13px; margin-bottom: 12px; transition: 0.3s; }
+        .footer-link:hover { color: var(--primary-orange); transform: translateX(5px); }
+        
+        .newsletter-container { background: rgba(255,255,255,0.03); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
+        .news-input { background: rgba(255,255,255,0.1); border: none; padding: 12px 15px; border-radius: 4px; color: white; width: 100%; margin-bottom: 15px; font-size: 13px; outline: none;}
+        .news-btn { background: var(--sky-blue); color: white; width: 100%; border: none; padding: 12px; font-weight: 700; border-radius: 4px; transition: 0.3s; }
+        .news-btn:hover { background: var(--primary-orange); }
+
+        .social-links a { 
+            width: 35px; height: 35px; background: rgba(255,255,255,0.1); color: #fff; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            border-radius: 50%; margin-right: 10px; transition: 0.3s; text-decoration: none; 
+        }
+        .social-links a:hover { background: var(--sky-blue); transform: translateY(-3px); }
+
+        .wa-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25d366; 
+            color: white; width: 55px; height: 55px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h2 class="fw-bold m-0" style="color:#222">Deco<span style="color:var(--deep-red)">Tech</span></h2>
+            <div class="search-group d-none d-lg-flex">
+                <input type="text" class="search-input" placeholder="Search our store">
+                <button class="search-btn"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="d-flex gap-4">
+                <div class="contact-info d-none d-md-block text-end">
+                    <i class="fa fa-headphones-simple"></i> Call now: <br><strong>+2800 0500 2600</strong>
+                </div>
+                <div class="contact-info d-none d-md-block text-end">
+                    <i class="fa fa-envelope"></i> Email now: <br><strong>info@gmail.com</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="decor.html">Decor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gadgets.html">Gadgets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="clothing.html">Clothing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Elias</a></li>
+                </ul>
+            </div>
+            <div class="d-flex gap-4 fs-5 align-items-center">
+                <i class="fa-regular fa-user cursor-pointer"></i>
+                <i class="fa-regular fa-heart cursor-pointer"></i>
+                <i class="fa-solid fa-shopping-bag cursor-pointer"></i>
+            </div>
+        </div>
+    </nav>
+
+    <section class="shop-header" data-aos="fade-down">
+        <div class="container">
+            <h1 class="fw-800">Shop Collection</h1>
+            <p>Home / Shop</p>
+        </div>
+    </section>
+
+    <section class="container mb-5">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <button class="filter-btn active">All Product</button>
+            <button class="filter-btn">Decor</button>
+            <button class="filter-btn">Gadgets</button>
+            <button class="filter-btn">Clothing</button>
+        </div>
+
+        <div class="row g-4">
+            <script>
+                const products = [
+                    { name: "Smart Watch Z", price: "€45,00", img: "https://i.ibb.co/mS6S5S6/smart-watch-png.png" },
+                    { name: "Premium Headphone", price: "€89,00", img: "https://i.ibb.co/Xz9yH1Z/headphones-png.png" },
+                    { name: "Home Assistant", price: "€120,00", img: "https://i.ibb.co/6y4nJ8B/smart-speaker.png" },
+                    { name: "Modern Vase", price: "€25,00", img: "https://via.placeholder.com/200/f9f9f9/ccc?text=Decor" },
+                    { name: "Smart Bulb", price: "€15,00", img: "https://via.placeholder.com/200/f9f9f9/ccc?text=Gadget" },
+                    { name: "Designer T-Shirt", price: "€30,00", img: "https://via.placeholder.com/200/f9f9f9/ccc?text=Clothing" },
+                    { name: "Wall Clock", price: "€40,00", img: "https://via.placeholder.com/200/f9f9f9/ccc?text=Decor" },
+                    { name: "Wireless Mouse", price: "€22,00", img: "https://via.placeholder.com/200/f9f9f9/ccc?text=Gadget" }
+                ];
+
+                products.forEach((p, i) => {
+                    document.write(`
+                        <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="${i * 50}">
+                            <div class="product-card">
+                                <div class="img-container">
+                                    <span class="badge-sale">SALE</span>
+                                    <img src="${p.img}" class="img-fluid" style="height:180px; object-fit:contain; width:100%">
+                                    <div class="product-actions">
+                                        <div class="p-action-icon"><i class="fa fa-heart"></i></div>
+                                        <div class="p-action-icon"><i class="fa fa-shopping-cart"></i></div>
+                                        <div class="p-action-icon"><i class="fa fa-eye"></i></div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h6>${p.name}</h6>
+                                    <div class="price">${p.price}</div>
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+            </script>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <div class="footer-logo">Deco<span>Tech</span></div>
+                    <p class="footer-desc">Your destination for premium smart gadgets and home decor. We combine quality with modern aesthetics to elevate your lifestyle.</p>
+                    <div class="social-links mt-4">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h5 class="footer-head">Quick Menu</h5>
+                    <a href="#" class="footer-link">Home</a>
+                    <a href="#" class="footer-link">Shop</a>
+                    <a href="#" class="footer-link">Decor</a>
+                    <a href="#" class="footer-link">Gadgets</a>
+                    <a href="#" class="footer-link">Clothing</a>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h5 class="footer-head">Support</h5>
+                    <a href="#" class="footer-link">Contact Us</a>
+                    <a href="#" class="footer-link">About Elias</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Shipping Info</a>
+                    <a href="#" class="footer-link">Admin Login</a>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="footer-head">Newsletter</h5>
+                    <p class="footer-desc mb-4" style="padding-right:0">Subscribe to get special offers and once-in-a-lifetime deals.</p>
+                    <div class="newsletter-container">
+                        <input type="email" class="news-input" placeholder="Your Email Address">
+                        <button class="news-btn">SUBSCRIBE NOW</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5 pt-4 border-top border-secondary">
+                <div class="col-md-6 text-center text-md-start small text-secondary">
+                    © 2026 DecoTech Store. All Rights Reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end small text-secondary">
+                    Design & Develop by Elias Ahmmed
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" class="wa-float"><i class="fab fa-whatsapp"></i></a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+    </script>
+</body>
+</html>

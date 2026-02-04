@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DecoTech Admin | Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sidebar-navy: #011627;
+            --sky-blue: #00b4d8;
+            --bg-body: #f0f4f8;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            transition: 0.3s;
+        }
+
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--sidebar-navy);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .brand-logo span {
+            color: var(--sky-blue);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header p {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #dee2e6;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.1);
+            border-color: var(--sky-blue);
+        }
+
+        .btn-login {
+            background: var(--sidebar-navy);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            background: var(--sky-blue);
+            transform: translateY(-2px);
+        }
+
+        .forgot-pass {
+            text-align: right;
+            display: block;
+            font-size: 12px;
+            color: var(--sky-blue);
+            text-decoration: none;
+            margin-top: 5px;
+        }
+
+        /* Alert Style */
+        #errorMsg {
+            display: none;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="brand-logo">Deco<span>Tech</span></div>
+        <div class="login-header">
+            <h5 class="fw-bold">Welcome Back!</h5>
+            <p>Please login to your admin account</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="mb-3">
+                <label class="form-label">Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fa fa-envelope text-muted"></i></span>
+                    <input type="email" id="email" class="form-control border-start-0" placeholder="admin@decotech.com" required>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fa fa-lock text-muted"></i></span>
+                    <input type="password" id="password" class="form-control border-start-0" placeholder="••••••••" required>
+                </div>
+                <a href="#" class="forgot-pass">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn-login">Login to Dashboard</button>
+            
+            <div id="errorMsg" class="alert alert-danger py-2">
+                <i class="fa fa-exclamation-circle me-1"></i> Invalid Email or Password!
+            </div>
+        </form>
+
+        <div class="mt-4 text-center">
+            <small class="text-muted">Don't have an account? <a href="#" class="text-decoration-none" style="color: var(--sky-blue);">Contact Super Admin</a></small>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            // সহজ লগইন লজিক (আপনি আপনার পছন্দমতো ইউজারনেম/পাসওয়ার্ড সেট করতে পারেন)
+            if(email === "admin@decotech.com" && password === "123456") {
+                // সফল হলে ড্যাশবোর্ড পেজে নিয়ে যাবে (নিশ্চিত করুন আপনার ড্যাশবোর্ড ফাইলের নাম 'dashboard.html' আছে)
+                window.location.href = "dashboard.html"; 
+            } else {
+                // ভুল হলে এরর মেসেজ দেখাবে
+                errorMsg.style.display = "block";
+                setTimeout(() => {
+                    errorMsg.style.display = "none";
+                }, 3000);
+            }
+        });
+    </script>
+
+</body>
+</html>
