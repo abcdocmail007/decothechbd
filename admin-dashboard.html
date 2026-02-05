@@ -21,7 +21,6 @@
 
         body { font-family: 'Poppins', sans-serif; background-color: var(--bg-body); margin: 0; display: flex; }
 
-        /* Sidebar Style */
         .sidebar {
             width: 260px;
             height: 100vh;
@@ -45,10 +44,8 @@
             border-left: 4px solid var(--sky-blue); 
         }
 
-        /* Main Content */
         .main-wrapper { margin-left: 260px; width: calc(100% - 260px); padding: 30px; transition: 0.3s; }
 
-        /* Header Card */
         .header-section {
             background: white; border-radius: 15px; padding: 20px 30px;
             display: flex; justify-content: space-between; align-items: center;
@@ -83,6 +80,8 @@
         .pending { background: #fef3c7; color: #92400e; }
         .cancelled { background: #fee2e2; color: #991b1b; }
 
+        .prod-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+
         @media (max-width: 992px) {
             .sidebar { width: 80px; }
             .sidebar span, .sidebar-brand span { display: none; }
@@ -96,7 +95,7 @@
         <div class="sidebar-brand">Deco<span>Tech</span></div>
         <nav class="mt-4">
             <a href="#" class="nav-link-item active"><i class="fa fa-th-large"></i> <span>Dashboard</span></a>
-            <a href="#" class="nav-link-item"><i class="fa fa-box"></i> <span>Products</span></a>
+            <a href="#product-manage-section" class="nav-link-item"><i class="fa fa-box"></i> <span>Products</span></a>
             <a href="#" class="nav-link-item"><i class="fa fa-shopping-cart"></i> <span>Orders</span></a>
             <a href="#" class="nav-link-item"><i class="fa fa-users"></i> <span>Customers</span></a>
             <a href="#" class="nav-link-item"><i class="fa fa-cog"></i> <span>Settings</span></a>
@@ -108,7 +107,7 @@
         <div class="header-section">
             <h5 class="fw-bold m-0">Admin Dashboard Overview</h5>
             <div class="d-flex align-items-center gap-3">
-                <button class="btn-add-new" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                <button class="btn-add-new" onclick="openAddModal()">
                     <i class="fa fa-plus me-2"></i> Add Product
                 </button>
                 <div class="text-end d-none d-md-block">
@@ -165,10 +164,32 @@
             </div>
         </div>
 
+        <div class="content-box" id="product-manage-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h6 class="fw-bold m-0">Inventory Management</h6>
+                <button class="btn btn-sm btn-outline-primary" onclick="refreshData()"><i class="fa fa-sync"></i> Sync</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr style="font-size: 13px;">
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Discount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="content-box">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h6 class="fw-bold m-0">Recent Orders</h6>
-                <button class="btn btn-sm btn-dark px-3" onclick="refreshData()">Refresh</button>
             </div>
             <div class="table-responsive">
                 <table class="table align-middle">
@@ -193,11 +214,12 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content" style="border-radius: 20px; border: none;">
                 <div class="modal-header border-0 p-4">
-                    <h5 class="fw-bold m-0">Add New Product to Store</h5>
+                    <h5 class="fw-bold m-0" id="modalTitle">Add New Product</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4 pt-0">
                     <form id="productForm">
+                        <input type="hidden" id="editProductId">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-muted">Product Name</label>
@@ -217,11 +239,11 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small fw-bold text-muted">Stock Quantity</label>
-                                <input type="number" id="pStock" class="form-control" placeholder="Quantity" value="10">
+                                <input type="number" id="pStock" class="form-control" value="10">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small fw-bold text-muted">Discount (%)</label>
-                                <input type="number" id="pDiscount" class="form-control" placeholder="0" value="0">
+                                <input type="number" id="pDiscount" class="form-control" value="0">
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label small fw-bold text-muted">Product Image URL</label>
@@ -246,70 +268,59 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // --- 1. Supabase Initialization ---
         const supabaseUrl = 'https://qxiofcydkujuxoiyvdlh.supabase.co';
         const supabaseKey = 'sb_publishable_QOjefQ_1QCL6BGNkmAHn5w_bZBoLH-R'; 
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // --- 2. Chart Variables ---
         let revChart, statChart;
+        const productModal = new bootstrap.Modal(document.getElementById('addProductModal'));
 
-        function initCharts(delivered = 0, pending = 0, cancelled = 0) {
-            const lineCtx = document.getElementById('revenueChart').getContext('2d');
-            if(revChart) revChart.destroy();
-            revChart = new Chart(lineCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Revenue',
-                        data: [1500, 2100, 1800, 3200, 2800, 4100, 4800],
-                        borderColor: '#00b4d8', backgroundColor: 'rgba(0, 180, 216, 0.1)',
-                        fill: true, tension: 0.4, borderWidth: 3
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
-
-            const pieCtx = document.getElementById('statusChart').getContext('2d');
-            if(statChart) statChart.destroy();
-            statChart = new Chart(pieCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Delivered', 'Pending', 'Cancelled'],
-                    datasets: [{
-                        data: [delivered, pending, cancelled],
-                        backgroundColor: ['#00b4d8', '#fb8500', '#ef4444'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '70%' }
-            });
-        }
-
-        // --- 3. Data Loading Logic ---
+        // --- Data Loading Logic ---
         async function refreshData() {
+            const { data: products, error: pError } = await _supabase.from('products').select('*').order('id', { ascending: false });
             const { data: orders, error: oError } = await _supabase.from('orders').select('*').order('created_at', { ascending: false });
-            const { count: pCount } = await _supabase.from('products').select('*', { count: 'exact', head: true });
 
-            if (oError) { console.error(oError); return; }
+            if (pError || oError) return;
 
+            // Update Stats
+            document.getElementById('totalProducts').innerText = products.length;
+            document.getElementById('totalOrders').innerText = orders.length;
+
+            // Render Products Table
+            const pTableBody = document.getElementById('productsTableBody');
+            pTableBody.innerHTML = '';
+            products.forEach(p => {
+                pTableBody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="${p.image_url || 'https://via.placeholder.com/40'}" class="prod-thumb">
+                                <span class="fw-semibold">${p.name}</span>
+                            </div>
+                        </td>
+                        <td><span class="badge bg-light text-dark">${p.category}</span></td>
+                        <td class="fw-bold">€${p.price}</td>
+                        <td>${p.Stock_Quantity}</td>
+                        <td class="text-success">${p.Discount}% Off</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-light text-primary" onclick='openEditModal(${JSON.stringify(p)})'><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-sm btn-light text-danger" onclick="deleteProduct(${p.id})"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Render Orders Table
             let totalSales = 0;
-            let statusCount = { delivered: 0, pending: 0, cancelled: 0 };
-            let customers = new Set();
-            const tableBody = document.getElementById('ordersTableBody');
-            tableBody.innerHTML = '';
-
+            const oTableBody = document.getElementById('ordersTableBody');
+            oTableBody.innerHTML = '';
             orders.forEach(order => {
-                // আপনার ডাটাবেজে price বা amount এর কলামের নাম অনুযায়ী চেক করুন
-                let amount = order.total_price || order.total_amount || 0;
+                let amount = order.total_price || 0;
                 totalSales += amount;
-                
-                let s = (order.order_status || order.status || 'pending').toLowerCase();
-                if(statusCount.hasOwnProperty(s)) statusCount[s]++;
-                customers.add(order.customer_name);
-
-                tableBody.innerHTML += `
+                let s = (order.order_status || 'pending').toLowerCase();
+                oTableBody.innerHTML += `
                     <tr>
                         <td class="fw-semibold">#DT-${order.id.toString().slice(-4)}</td>
                         <td>${order.customer_name}</td>
@@ -320,68 +331,92 @@
                     </tr>
                 `;
             });
-
             document.getElementById('totalSales').innerText = '€' + totalSales.toLocaleString();
-            document.getElementById('totalOrders').innerText = orders.length;
-            document.getElementById('totalCustomers').innerText = customers.size;
-            document.getElementById('totalProducts').innerText = pCount || 0;
-
-            initCharts(statusCount.delivered, statusCount.pending, statusCount.cancelled);
+            
+            initCharts(15, 8, 3);
         }
 
-        // --- 4. Save Product Function ---
+        // --- Modal Control ---
+        function openAddModal() {
+            document.getElementById('modalTitle').innerText = "Add New Product";
+            document.getElementById('productForm').reset();
+            document.getElementById('editProductId').value = "";
+            productModal.show();
+        }
+
+        function openEditModal(p) {
+            document.getElementById('modalTitle').innerText = "Edit Product Information";
+            document.getElementById('editProductId').value = p.id;
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pCategory').value = p.category;
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pStock').value = p.Stock_Quantity;
+            document.getElementById('pDiscount').value = p.Discount;
+            document.getElementById('pImage').value = p.image_url;
+            document.getElementById('pDesc').value = p.description;
+            productModal.show();
+        }
+
+        // --- CRUD Actions ---
         async function saveProduct() {
             const btn = document.getElementById('saveBtn');
-            const pName = document.getElementById('pName').value;
-            const pPrice = document.getElementById('pPrice').value;
-
-            if(!pName || !pPrice) {
-                alert("Please enter product name and price!");
-                return;
-            }
-
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
-            btn.disabled = true;
-
-            // আপনার Schema Visualizer-এর হুবহু কলামের নাম এখানে দেওয়া হয়েছে
+            const id = document.getElementById('editProductId').value;
+            
             const productData = {
-                name: pName,
+                name: document.getElementById('pName').value,
                 category: document.getElementById('pCategory').value,
-                price: parseInt(pPrice),
+                price: parseInt(document.getElementById('pPrice').value),
                 Stock_Quantity: parseInt(document.getElementById('pStock').value) || 0,
                 Discount: parseInt(document.getElementById('pDiscount').value) || 0,
                 image_url: document.getElementById('pImage').value,
                 description: document.getElementById('pDesc').value
             };
 
+            btn.disabled = true;
             try {
-                const { error } = await _supabase.from('products').insert([productData]);
+                let error;
+                if(id) {
+                    const result = await _supabase.from('products').update(productData).eq('id', id);
+                    error = result.error;
+                } else {
+                    const result = await _supabase.from('products').insert([productData]);
+                    error = result.error;
+                }
 
                 if (error) throw error;
-
-                alert("Product saved successfully!");
-                document.getElementById('productForm').reset();
-                
-                const modalEl = document.getElementById('addProductModal');
-                const modal = bootstrap.Modal.getInstance(modalEl);
-                if(modal) modal.hide();
-                
+                alert(id ? "Updated successfully!" : "Added successfully!");
+                productModal.hide();
                 refreshData();
-
             } catch (err) {
-                console.error("Save Error:", err);
-                alert("Failed to save: " + err.message);
+                alert("Action failed: " + err.message);
             } finally {
-                btn.innerHTML = 'Save Product';
                 btn.disabled = false;
             }
         }
 
-        function logout() {
-            localStorage.removeItem('isLoggedIn');
-            window.location.href = 'login.html';
+        async function deleteProduct(id) {
+            if(confirm("Are you sure you want to remove this product?")) {
+                const { error } = await _supabase.from('products').delete().eq('id', id);
+                if(!error) {
+                    refreshData();
+                } else {
+                    alert("Delete failed: " + error.message);
+                }
+            }
         }
 
+        // --- Charts & Helpers ---
+        function initCharts(delivered, pending, cancelled) {
+            const lineCtx = document.getElementById('revenueChart').getContext('2d');
+            if(revChart) revChart.destroy();
+            revChart = new Chart(lineCtx, { type: 'line', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Revenue', data: [1500, 2100, 1800, 3200, 2800, 4100, 4800], borderColor: '#00b4d8', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false } });
+
+            const pieCtx = document.getElementById('statusChart').getContext('2d');
+            if(statChart) statChart.destroy();
+            statChart = new Chart(pieCtx, { type: 'doughnut', data: { labels: ['Delivered', 'Pending', 'Cancelled'], datasets: [{ data: [delivered, pending, cancelled], backgroundColor: ['#00b4d8', '#fb8500', '#ef4444'] }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%' } });
+        }
+
+        function logout() { localStorage.removeItem('isLoggedIn'); window.location.href = 'login.html'; }
         window.onload = refreshData;
     </script>
 </body>
