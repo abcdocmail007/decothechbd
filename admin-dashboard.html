@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
             --sidebar-navy: #011627;
@@ -29,6 +31,7 @@
             left: 0; top: 0;
             padding: 20px 0;
             transition: 0.3s;
+            z-index: 100;
         }
         .sidebar-brand { padding: 0 25px 30px; font-size: 24px; font-weight: 800; }
         .sidebar-brand span { color: var(--sky-blue); }
@@ -52,7 +55,6 @@
             box-shadow: var(--card-shadow); margin-bottom: 30px;
         }
 
-        /* Stat Cards */
         .stat-card {
             background: white; border-radius: 20px; padding: 25px; border: none;
             box-shadow: var(--card-shadow); height: 100%;
@@ -65,7 +67,6 @@
         .bg-blue-light { background: rgba(0, 180, 216, 0.1); color: var(--sky-blue); }
         .bg-orange-light { background: rgba(251, 133, 0, 0.1); color: var(--accent-orange); }
 
-        /* Chart & Table Boxes */
         .content-box {
             background: white; border-radius: 20px; padding: 25px;
             box-shadow: var(--card-shadow); margin-bottom: 30px;
@@ -180,21 +181,13 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="ordersTableBody">
                         <tr>
                             <td class="fw-semibold">#DT-5011</td>
                             <td>Karim Khan</td>
                             <td>Smart LED Lamp</td>
                             <td class="fw-bold">€45.00</td>
                             <td><span class="status-pill delivered">Delivered</span></td>
-                            <td><button class="btn btn-sm btn-light border"><i class="fa fa-eye"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-semibold">#DT-5012</td>
-                            <td>Sufia Begum</td>
-                            <td>Modern Vase Blue</td>
-                            <td class="fw-bold">€12.00</td>
-                            <td><span class="status-pill pending">Pending</span></td>
                             <td><button class="btn btn-sm btn-light border"><i class="fa fa-eye"></i></button></td>
                         </tr>
                     </tbody>
@@ -215,11 +208,11 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-muted">Product Name</label>
-                                <input type="text" class="form-control" placeholder="Enter product name" required>
+                                <input type="text" id="pName" class="form-control" placeholder="Enter product name" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-muted">Category</label>
-                                <select class="form-select">
+                                <select id="pCategory" class="form-select">
                                     <option>Decor</option>
                                     <option>Gadgets</option>
                                     <option>Clothing</option>
@@ -227,30 +220,30 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small fw-bold text-muted">Price (€)</label>
-                                <input type="number" class="form-control" placeholder="0.00" required>
+                                <input type="number" id="pPrice" class="form-control" placeholder="0.00" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small fw-bold text-muted">Stock Quantity</label>
-                                <input type="number" class="form-control" placeholder="Quantity" value="10">
+                                <input type="number" id="pStock" class="form-control" placeholder="Quantity" value="10">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small fw-bold text-muted">Discount (%)</label>
-                                <input type="number" class="form-control" placeholder="0">
+                                <input type="number" id="pDiscount" class="form-control" placeholder="0">
                             </div>
                             <div class="col-md-12">
-                                <label class="form-label small fw-bold text-muted">Product Image</label>
-                                <input type="file" class="form-control">
+                                <label class="form-label small fw-bold text-muted">Product Image URL</label>
+                                <input type="text" id="pImage" class="form-control" placeholder="Paste image link here">
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label small fw-bold text-muted">Description</label>
-                                <textarea class="form-control" rows="3" placeholder="Tell more about the product..."></textarea>
+                                <textarea id="pDesc" class="form-control" rows="3" placeholder="Tell more about the product..."></textarea>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer border-0 p-4 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-add-new rounded-pill px-4" onclick="saveProduct()">Save Product</button>
+                    <button type="button" id="saveBtn" class="btn btn-add-new rounded-pill px-4" onclick="saveProduct()">Save Product</button>
                 </div>
             </div>
         </div>
@@ -260,7 +253,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // Line Chart (Revenue Growth)
+        // --- Supabase Config ---
+        const supabaseUrl = 'https://qxiofcydkujuxoiyvdlh.supabase.co';
+        const supabaseKey = 'sb_publishable_Q0jefQ_1QCL6BGNkmAHn5w_bZBoL...'; // আপনার পুরো ANON KEY টি এখানে বসান
+        const supabase = supabasejs.createClient(supabaseUrl, supabaseKey);
+
+        // --- Charts Code (Static) ---
         const lineCtx = document.getElementById('revenueChart').getContext('2d');
         new Chart(lineCtx, {
             type: 'line',
@@ -277,7 +275,6 @@
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
 
-        // Pie/Doughnut Chart (Order Status)
         const pieCtx = document.getElementById('statusChart').getContext('2d');
         new Chart(pieCtx, {
             type: 'doughnut',
@@ -292,10 +289,55 @@
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '70%' }
         });
 
-        function saveProduct() {
-            alert("Success: Product has been added to the database!");
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
-            modal.hide();
+        // --- Save Product Function ---
+        async function saveProduct() {
+            const btn = document.getElementById('saveBtn');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
+            btn.disabled = true;
+
+            // ফর্ম থেকে ভ্যালু নেওয়া
+            const name = document.getElementById('pName').value;
+            const category = document.getElementById('pCategory').value;
+            const price = document.getElementById('pPrice').value;
+            const stock = document.getElementById('pStock').value;
+            const discount = document.getElementById('pDiscount').value;
+            const image = document.getElementById('pImage').value;
+            const description = document.getElementById('pDesc').value;
+
+            if(!name || !price) {
+                alert("Please fill name and price!");
+                btn.innerHTML = 'Save Product';
+                btn.disabled = false;
+                return;
+            }
+
+            // Supabase-এ ডেটা পাঠানো
+            const { data, error } = await supabase
+                .from('products')
+                .insert([
+                    { 
+                        name: name, 
+                        category: category, 
+                        price: parseInt(price), 
+                        stock_quantity: parseInt(stock), 
+                        discount: parseInt(discount),
+                        image_url: image,
+                        description: description 
+                    }
+                ]);
+
+            if (error) {
+                alert("Error: " + error.message);
+                console.log(error);
+            } else {
+                alert("Success: Product has been added!");
+                document.getElementById('productForm').reset();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+                modal.hide();
+            }
+
+            btn.innerHTML = 'Save Product';
+            btn.disabled = false;
         }
     </script>
 </body>
