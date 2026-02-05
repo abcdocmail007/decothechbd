@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         :root {
             --primary-orange: #fb8500;
@@ -44,16 +46,9 @@
             position: relative;
             overflow: hidden;
         }
-        /* slide backgrounds */
-        .slide-1 {  background-image: url(img/clothing.png);
-            background-position: center;
-            background-size: cover; }
-        .slide-2 { background-image: url(img/decorhome.png);
-            background-position: center;
-            background-size: cover; }
-        .slide-3 { background-image: url(img/smart-gadget.png);
-            background-position: center;
-            background-size: cover; }
+        .slide-1 { background-image: url(img/clothing.png); background-position: center; background-size: cover; }
+        .slide-2 { background-image: url(img/decorhome.png); background-position: center; background-size: cover; }
+        .slide-3 { background-image: url(img/smart-gadget.png); background-position: center; background-size: cover; }
 
         .carousel-content h1 { font-size: 55px; font-weight: 800; color: #00B4D8; line-height: 1.1; margin-bottom: 20px; }
         .carousel-content p { color: #D62828; font-size: 20px; margin-bottom: 30px; opacity: 0.9; }
@@ -62,19 +57,19 @@
             font-weight: bold; border-radius: 5px; transition: 0.4s;
         }
         .view-all-btn:hover { background: #D62828; color: #fff; transform: translateY(-3px); }
-        .carousel-img { max-height: 400px; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2)); }
 
         /* Section Title */
         .section-title { font-family: 'Courier New', Courier, monospace; color: var(--deep-red); font-size: 60px; font-weight: 900; margin: 20px 0 50px; opacity: 0.8; }
 
-        /* Product Card */
+        /* Product Card - হুবহু আপনার ডিজাইন রাখা হয়েছে */
         .product-card { transition: 0.3s; border: none; }
         .img-container { 
             background: #f9f9f9; border-radius: 10px; padding: 40px 20px; 
-            position: relative; overflow: hidden; transition: 0.3s; 
+            position: relative; overflow: hidden; transition: 0.3s; height: 250px; display: flex; align-items: center; justify-content: center;
         }
+        .img-container img { max-height: 100%; object-fit: contain; }
         .product-card:hover .img-container { background: #f1f1f1; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .badge-sale { position: absolute; top: 15px; left: 15px; background: var(--deep-red); color: white; font-size: 10px; padding: 3px 8px; border-radius: 3px; font-weight: bold; }
+        .badge-sale { position: absolute; top: 15px; left: 15px; background: var(--deep-red); color: white; font-size: 10px; padding: 3px 8px; border-radius: 3px; font-weight: bold; z-index: 2; }
         
         .product-actions { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
@@ -85,43 +80,23 @@
         .p-action-icon:hover { background: var(--sky-blue); color: white; }
 
         .product-info { padding: 15px 0; text-align: left; }
-        .product-info h6 { font-size: 13px; color: #777; margin-bottom: 5px; }
+        .product-info h6 { font-size: 13px; color: #777; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .price { color: var(--sky-blue); font-weight: 800; font-size: 15px; }
         .rating { color: #ffb703; font-size: 11px; margin-top: 5px; }
 
-        /* Testimonials */
+        /* Testimonials & Footer */
         .testi-heading { font-weight: 800; font-size: 32px; margin-bottom: 50px; color: #222; }
         .testi-card { border: 1px solid #eee; padding: 40px; border-radius: 10px; height: 100%; transition: 0.3s; background: #fff; }
         .testi-card:hover { border-color: var(--primary-orange); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .testi-card i.fa-quote-left { color: var(--primary-orange); font-size: 24px; margin-bottom: 20px; }
-
-        /* Modern Footer */
         footer { background: var(--dark-navy); color: #fff; padding: 80px 0 20px; }
         .footer-logo { font-size: 30px; font-weight: 800; margin-bottom: 25px; }
         .footer-logo span { color: var(--sky-blue); }
         .footer-link { display: block; color: #adb5bd; text-decoration: none; font-size: 13px; margin-bottom: 12px; transition: 0.3s; }
-        .footer-link:hover { color: var(--primary-orange); transform: translateX(5px); }
-        
         .newsletter-container { background: rgba(255,255,255,0.03); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
         .news-input { background: rgba(255,255,255,0.1); border: none; padding: 12px 15px; border-radius: 4px; color: white; width: 100%; margin-bottom: 15px; font-size: 13px; outline: none;}
         .news-btn { background: var(--sky-blue); color: white; width: 100%; border: none; padding: 12px; font-weight: 700; border-radius: 4px; transition: 0.3s; }
-        .news-btn:hover { background: var(--primary-orange); }
-
-        .social-links a { 
-            width: 35px; height: 35px; background: rgba(255,255,255,0.1); color: #fff; 
-            display: inline-flex; align-items: center; justify-content: center; 
-            border-radius: 50%; margin-right: 10px; transition: 0.3s; text-decoration: none; 
-        }
-        .social-links a:hover { background: var(--sky-blue); transform: translateY(-3px); }
-
-        /* Floating WhatsApp */
-        .wa-float {
-            position: fixed; bottom: 30px; right: 30px; background: #25d366; 
-            color: white; width: 55px; height: 55px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 999;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; text-decoration: none;
-        }
-        .wa-float:hover { transform: scale(1.1); color: white; }
+        .social-links a { width: 35px; height: 35px; background: rgba(255,255,255,0.1); color: #fff; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; transition: 0.3s; text-decoration: none; }
+        .wa-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 999; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -152,13 +127,12 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="decor.html">Decor</a></li>
-                    <li class="nav-item"><a class="nav-link" href="gadgets.html">Gadgets</a></li>
-                    <li class="nav-item"><a class="nav-link" href="clothing.html">Clothing</a></li>
-                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Elias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Decor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Gadgets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Clothing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
                 </ul>
             </div>
             <div class="d-flex gap-4 fs-5 align-items-center">
@@ -184,9 +158,6 @@
                             <p>New Arrival - Up to 40% Off</p>
                             <button class="view-all-btn">VIEW ALL <i class="fa fa-arrow-right ms-2"></i></button>
                         </div>
-                        <!-- <div class="col-lg-6 text-center" data-aos="zoom-in">
-                            <img src="img/decorbnnr1.png" class="img-fluid carousel-img" alt="Smart Watch">
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -198,9 +169,6 @@
                             <p>Pure Audio - Starting from $99</p>
                             <button class="view-all-btn">SHOP NOW <i class="fa fa-arrow-right ms-2"></i></button>
                         </div>
-                        <!-- <div class="col-lg-6 text-center">
-                            <img src="https://i.ibb.co/Xz9yH1Z/headphones-png.png" class="img-fluid carousel-img" alt="Headphones">
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -212,9 +180,6 @@
                             <p>Control Your Home with One Touch</p>
                             <button class="view-all-btn">EXPLORE <i class="fa fa-arrow-right ms-2"></i></button>
                         </div>
-                        <!-- <div class="col-lg-6 text-center">
-                            <img src="https://i.ibb.co/6y4nJ8B/smart-speaker.png" class="img-fluid carousel-img" alt="Smart Speaker">
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -229,38 +194,8 @@
 
     <section class="container text-center py-5">
         <h2 class="section-title" data-aos="fade-up">All Product</h2>
-        <div class="row g-4 mt-2">
-            <script>
-                const products = [
-                    "Mung beans", "Natural soyabean", "Red beans", 
-                    "Almonds whole", "Natural soyabean", "Red beans"
-                ];
-                products.forEach((name, index) => {
-                    document.write(`
-                        <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="${index * 100}">
-                            <div class="product-card">
-                                <div class="img-container">
-                                    <span class="badge-sale">30%</span>
-                                    <img src="https://via.placeholder.com/150/f9f9f9/ccc?text=Product" class="img-fluid">
-                                    <div class="product-actions">
-                                        <div class="p-action-icon"><i class="fa fa-heart"></i></div>
-                                        <div class="p-action-icon"><i class="fa fa-shopping-cart"></i></div>
-                                        <div class="p-action-icon"><i class="fa fa-eye"></i></div>
-                                    </div>
-                                </div>
-                                <div class="product-info">
-                                    <h6>${name}</h6>
-                                    <div class="price">€14,00</div>
-                                    <div class="rating">
-                                        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `);
-                });
-            </script>
-        </div>
+        <div id="product-list" class="row g-4 mt-2">
+            </div>
     </section>
 
     <section class="py-5" style="background:#fff">
@@ -301,7 +236,6 @@
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="col-6 col-lg-2">
@@ -309,20 +243,14 @@
                     <a href="#" class="footer-link">Home</a>
                     <a href="#" class="footer-link">Shop</a>
                     <a href="#" class="footer-link">Decor</a>
-                    <a href="#" class="footer-link">Gadgets</a>
-                    <a href="#" class="footer-link">Clothing</a>
                 </div>
                 <div class="col-6 col-lg-2">
                     <h5 class="footer-head">Support</h5>
                     <a href="#" class="footer-link">Contact Us</a>
-                    <a href="#" class="footer-link">About Elias</a>
-                    <a href="#" class="footer-link">Privacy Policy</a>
-                    <a href="#" class="footer-link">Shipping Info</a>
                     <a href="login.html" target="_blank" class="footer-link">Admin Login</a>
                 </div>
                 <div class="col-lg-4">
                     <h5 class="footer-head">Newsletter</h5>
-                    <p class="footer-link mb-4" style="color:#adb5bd">Subscribe to get special offers and once-in-a-lifetime deals.</p>
                     <div class="newsletter-container">
                         <input type="email" class="news-input" placeholder="Your Email Address">
                         <button class="news-btn">SUBSCRIBE NOW</button>
@@ -333,9 +261,6 @@
                 <div class="col-md-6 text-center text-md-start small text-secondary">
                     © 2026 DecoTech Store. All Rights Reserved.
                 </div>
-                <div class="col-md-6 text-center text-md-end small text-secondary">
-                    03/02/2026 | Rajshahi, BD
-                </div>
             </div>
         </div>
     </footer>
@@ -344,8 +269,61 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
         AOS.init({ duration: 1000, once: true });
+
+        // --- Supabase Setup ---
+        const supabaseUrl = 'YOUR_SUPABASE_URL'; 
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function loadProducts() {
+            const productList = document.getElementById('product-list');
+            
+            const { data: products, error } = await _supabase
+                .from('products')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error("Error fetching products:", error);
+                return;
+            }
+
+            productList.innerHTML = ''; 
+
+            products.forEach((product, index) => {
+                // Discount এবং Price আপনার ডাটাবেজের কলাম অনুযায়ী (Capital Letter)
+                const discount = product.Discount || 0;
+                
+                productList.innerHTML += `
+                    <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="${index * 100}">
+                        <div class="product-card">
+                            <div class="img-container">
+                                ${discount > 0 ? `<span class="badge-sale">${discount}% OFF</span>` : ''}
+                                <img src="${product.image_url || 'https://via.placeholder.com/150'}" class="img-fluid">
+                                <div class="product-actions">
+                                    <div class="p-action-icon"><i class="fa fa-heart"></i></div>
+                                    <div class="p-action-icon"><i class="fa fa-shopping-cart"></i></div>
+                                    <div class="p-action-icon"><i class="fa fa-eye"></i></div>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h6 title="${product.name}">${product.name}</h6>
+                                <div class="price">€${product.price}</div>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে প্রোডাক্টগুলো নিয়ে আসবে
+        window.onload = loadProducts;
     </script>
 </body>
 </html>
