@@ -85,6 +85,9 @@
             font-weight: 600;
             margin-top: 20px;
             transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .btn-login:hover {
@@ -101,12 +104,18 @@
             margin-top: 5px;
         }
 
-        /* Alert Style */
         #errorMsg {
             display: none;
             font-size: 12px;
             text-align: center;
             margin-top: 15px;
+        }
+
+        .spinner-border {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: 8px;
+            display: none;
         }
     </style>
 </head>
@@ -137,7 +146,10 @@
                 <a href="#" class="forgot-pass">Forgot Password?</a>
             </div>
 
-            <button type="submit" class="btn-login">Login to Dashboard</button>
+            <button type="submit" id="loginBtn" class="btn-login">
+                <div class="spinner-border text-light" role="status" id="loginSpinner"></div>
+                <span id="btnText">Login to Dashboard</span>
+            </button>
             
             <div id="errorMsg" class="alert alert-danger py-2">
                 <i class="fa fa-exclamation-circle me-1"></i> Invalid Email or Password!
@@ -156,18 +168,32 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('errorMsg');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('loginSpinner');
 
-            // সহজ লগইন লজিক (আপনি আপনার পছন্দমতো ইউজারনেম/পাসওয়ার্ড সেট করতে পারেন)
-            if(email === "admin@decotech.com" && password === "123456") {
-                // সফল হলে ড্যাশবোর্ড পেজে নিয়ে যাবে (নিশ্চিত করুন আপনার ড্যাশবোর্ড ফাইলের নাম 'dashboard.html' আছে)
-                window.location.href = "dashboard.html"; 
-            } else {
-                // ভুল হলে এরর মেসেজ দেখাবে
-                errorMsg.style.display = "block";
-                setTimeout(() => {
-                    errorMsg.style.display = "none";
-                }, 3000);
-            }
+            // লোডিং শুরু
+            spinner.style.display = "block";
+            btnText.innerText = "Checking...";
+            loginBtn.disabled = true;
+
+            setTimeout(() => {
+                // আপনার দেওয়া ইমেইল এবং পাসওয়ার্ড চেক
+                if(email === "admin@decotech.com" && password === "Elias14296") {
+                    // সফল হলে ড্যাশবোর্ডে পাঠাবে
+                    window.location.href = "admin-dashboard.html"; 
+                } else {
+                    // ভুল হলে এরর মেসেজ দেখাবে
+                    errorMsg.style.display = "block";
+                    spinner.style.display = "none";
+                    btnText.innerText = "Login to Dashboard";
+                    loginBtn.disabled = false;
+                    
+                    setTimeout(() => {
+                        errorMsg.style.display = "none";
+                    }, 3000);
+                }
+            }, 1000);
         });
     </script>
 
