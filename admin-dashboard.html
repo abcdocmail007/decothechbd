@@ -21,9 +21,17 @@
 
         body { font-family: 'Poppins', sans-serif; background-color: var(--bg-body); margin: 0; display: flex; }
 
+        /* Sidebar Style */
         .sidebar {
-            width: 260px; height: 100vh; background: var(--sidebar-navy); color: white;
-            position: fixed; left: 0; top: 0; padding: 20px 0; transition: 0.3s; z-index: 100;
+            width: 260px;
+            height: 100vh;
+            background: var(--sidebar-navy);
+            color: white;
+            position: fixed;
+            left: 0; top: 0;
+            padding: 20px 0;
+            transition: 0.3s;
+            z-index: 100;
         }
         .sidebar-brand { padding: 0 25px 30px; font-size: 24px; font-weight: 800; }
         .sidebar-brand span { color: var(--sky-blue); }
@@ -33,11 +41,14 @@
         }
         .nav-link-item i { width: 25px; font-size: 18px; margin-right: 10px; }
         .nav-link-item:hover, .nav-link-item.active { 
-            color: var(--sky-blue); background: rgba(255,255,255,0.05); border-left: 4px solid var(--sky-blue); 
+            color: var(--sky-blue); background: rgba(255,255,255,0.05); 
+            border-left: 4px solid var(--sky-blue); 
         }
 
+        /* Main Content */
         .main-wrapper { margin-left: 260px; width: calc(100% - 260px); padding: 30px; transition: 0.3s; }
 
+        /* Header Card */
         .header-section {
             background: white; border-radius: 15px; padding: 20px 30px;
             display: flex; justify-content: space-between; align-items: center;
@@ -56,14 +67,21 @@
         .bg-blue-light { background: rgba(0, 180, 216, 0.1); color: var(--sky-blue); }
         .bg-orange-light { background: rgba(251, 133, 0, 0.1); color: var(--accent-orange); }
 
-        .content-box { background: white; border-radius: 20px; padding: 25px; box-shadow: var(--card-shadow); margin-bottom: 30px; }
+        .content-box {
+            background: white; border-radius: 20px; padding: 25px;
+            box-shadow: var(--card-shadow); margin-bottom: 30px;
+        }
 
-        .btn-add-new { background: var(--sidebar-navy); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; }
+        .btn-add-new {
+            background: var(--sidebar-navy); color: white; border: none;
+            padding: 10px 20px; border-radius: 8px; font-weight: 600;
+        }
         .btn-add-new:hover { background: var(--sky-blue); }
 
         .status-pill { padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
         .delivered { background: #dcfce7; color: #166534; }
         .pending { background: #fef3c7; color: #92400e; }
+        .cancelled { background: #fee2e2; color: #991b1b; }
 
         @media (max-width: 992px) {
             .sidebar { width: 80px; }
@@ -80,7 +98,9 @@
             <a href="#" class="nav-link-item active"><i class="fa fa-th-large"></i> <span>Dashboard</span></a>
             <a href="#" class="nav-link-item"><i class="fa fa-box"></i> <span>Products</span></a>
             <a href="#" class="nav-link-item"><i class="fa fa-shopping-cart"></i> <span>Orders</span></a>
-            <a href="#" class="nav-link-item text-danger mt-5" onclick="handleLogout()"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="#" class="nav-link-item"><i class="fa fa-users"></i> <span>Customers</span></a>
+            <a href="#" class="nav-link-item"><i class="fa fa-cog"></i> <span>Settings</span></a>
+            <a href="#" class="nav-link-item mt-5 text-danger" onclick="logout()"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
 
@@ -117,14 +137,14 @@
             <div class="col-md-3">
                 <div class="stat-card">
                     <div class="icon-circle bg-blue-light"><i class="fa fa-users"></i></div>
-                    <p class="text-muted small mb-1">Total Customers</p>
+                    <p class="text-muted small mb-1">New Customers</p>
                     <h4 class="fw-bold" id="totalCustomers">0</h4>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card">
                     <div class="icon-circle bg-orange-light"><i class="fa fa-boxes"></i></div>
-                    <p class="text-muted small mb-1">Total Products</p>
+                    <p class="text-muted small mb-1">Available Products</p>
                     <h4 class="fw-bold" id="totalProducts">0</h4>
                 </div>
             </div>
@@ -148,7 +168,7 @@
         <div class="content-box">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h6 class="fw-bold m-0">Recent Orders</h6>
-                <button class="btn btn-sm btn-dark px-3" onclick="loadDashboardData()">Refresh</button>
+                <button class="btn btn-sm btn-dark px-3" onclick="refreshData()">Refresh</button>
             </div>
             <div class="table-responsive">
                 <table class="table align-middle">
@@ -156,6 +176,7 @@
                         <tr style="font-size: 13px;">
                             <th>Order ID</th>
                             <th>Customer</th>
+                            <th>Product</th>
                             <th>Amount</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -225,22 +246,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        // --- 1. Supabase Initialization ---
         const supabaseUrl = 'https://qxiofcydkujuxoiyvdlh.supabase.co';
         const supabaseKey = 'sb_publishable_QOjefQ_1QCL6BGNkmAHn5w_bZBoLH-R'; 
-        const supabase = supabasejs.createClient(supabaseUrl, supabaseKey);
+        const _supabase = supabasejs.createClient(supabaseUrl, supabaseKey);
 
-        // Security Check
-        if(localStorage.getItem('isLoggedIn') !== 'true') {
-            window.location.href = 'login.html';
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('isLoggedIn');
-            window.location.href = 'login.html';
-        }
-
-        // --- Charts Setup ---
-        function initCharts() {
+        // --- 2. Chart Initialization ---
+        function initCharts(delivered, pending, cancelled) {
             const lineCtx = document.getElementById('revenueChart').getContext('2d');
             new Chart(lineCtx, {
                 type: 'line',
@@ -250,10 +262,10 @@
                         label: 'Revenue',
                         data: [1500, 2100, 1800, 3200, 2800, 4100, 4800],
                         borderColor: '#00b4d8', backgroundColor: 'rgba(0, 180, 216, 0.1)',
-                        fill: true, tension: 0.4, borderWidth: 3
+                        fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
             const pieCtx = document.getElementById('statusChart').getContext('2d');
@@ -262,63 +274,59 @@
                 data: {
                     labels: ['Delivered', 'Pending', 'Cancelled'],
                     datasets: [{
-                        data: [70, 20, 10],
+                        data: [delivered, pending, cancelled],
                         backgroundColor: ['#00b4d8', '#fb8500', '#ef4444'],
-                        borderWidth: 0
+                        borderWidth: 0, hoverOffset: 10
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '70%' }
             });
         }
 
-        // --- Load Dashboard Data ---
-        async function loadDashboardData() {
-            // 1. Fetch Orders
-            const { data: orders, error: orderErr } = await supabase
-                .from('orders')
-                .select('*')
-                .order('created_at', { ascending: false });
+        // --- 3. Data Loading Logic ---
+        async function refreshData() {
+            // Load Orders
+            const { data: orders, error: oError } = await _supabase.from('orders').select('*').order('created_at', { ascending: false });
+            // Load Products Count
+            const { count: pCount, error: pError } = await _supabase.from('products').select('*', { count: 'exact', head: true });
 
-            if (!orderErr) {
-                const tableBody = document.getElementById('ordersTableBody');
-                tableBody.innerHTML = '';
-                let totalSales = 0;
+            if (oError) { console.error(oError); return; }
 
-                orders.forEach(order => {
-                    totalSales += order.total_amount;
-                    tableBody.innerHTML += `
-                        <tr>
-                            <td class="fw-semibold">#DT-${order.id.toString().slice(-4)}</td>
-                            <td>${order.customer_name}</td>
-                            <td class="fw-bold">€${order.total_amount}</td>
-                            <td><span class="status-pill ${order.status}">${order.status}</span></td>
-                            <td><button class="btn btn-sm btn-light border"><i class="fa fa-eye"></i></button></td>
-                        </tr>
-                    `;
-                });
+            let totalSales = 0;
+            let statusCount = { delivered: 0, pending: 0, cancelled: 0 };
+            let customers = new Set();
+            const tableBody = document.getElementById('ordersTableBody');
+            tableBody.innerHTML = '';
 
-                document.getElementById('totalOrders').innerText = orders.length;
-                document.getElementById('totalSales').innerText = '€' + totalSales.toLocaleString();
-                
-                // Set of unique customers
-                const uniqueCustomers = new Set(orders.map(o => o.customer_name)).size;
-                document.getElementById('totalCustomers').innerText = uniqueCustomers;
-            }
+            orders.forEach(order => {
+                totalSales += order.total_amount;
+                statusCount[order.status.toLowerCase()]++;
+                customers.add(order.customer_name);
 
-            // 2. Fetch Total Products
-            const { count: productCount, error: prodErr } = await supabase
-                .from('products')
-                .select('*', { count: 'exact', head: true });
-            
-            if (!prodErr) {
-                document.getElementById('totalProducts').innerText = productCount;
-            }
+                tableBody.innerHTML += `
+                    <tr>
+                        <td class="fw-semibold">#DT-${order.id.toString().slice(-4)}</td>
+                        <td>${order.customer_name}</td>
+                        <td>${order.product_name || 'Multi Products'}</td>
+                        <td class="fw-bold">€${order.total_amount.toFixed(2)}</td>
+                        <td><span class="status-pill ${order.status.toLowerCase()}">${order.status}</span></td>
+                        <td><button class="btn btn-sm btn-light border"><i class="fa fa-eye"></i></button></td>
+                    </tr>
+                `;
+            });
+
+            // Update Cards
+            document.getElementById('totalSales').innerText = '€' + totalSales.toLocaleString();
+            document.getElementById('totalOrders').innerText = orders.length;
+            document.getElementById('totalCustomers').innerText = customers.size;
+            document.getElementById('totalProducts').innerText = pCount || 0;
+
+            initCharts(statusCount.delivered, statusCount.pending, statusCount.cancelled);
         }
 
-        // --- Save Product ---
+        // --- 4. Save Product Function ---
         async function saveProduct() {
             const btn = document.getElementById('saveBtn');
-            const originalText = btn.innerHTML;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
             btn.disabled = true;
 
@@ -332,16 +340,14 @@
 
             if(!name || !price) {
                 alert("Please fill name and price!");
-                btn.innerHTML = originalText;
+                btn.innerHTML = 'Save Product';
                 btn.disabled = false;
                 return;
             }
 
-            const { error } = await supabase.from('products').insert([{ 
-                name, category, price: parseInt(price), 
-                stock_quantity: parseInt(stock), discount: parseInt(discount),
-                image_url: image, description 
-            }]);
+            const { error } = await _supabase.from('products').insert([
+                { name, category, price: parseFloat(price), stock_quantity: parseInt(stock), discount: parseInt(discount), image_url: image, description }
+            ]);
 
             if (error) {
                 alert("Error: " + error.message);
@@ -349,17 +355,19 @@
                 alert("Success: Product added!");
                 document.getElementById('productForm').reset();
                 bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-                loadDashboardData(); // Refresh counts
+                refreshData();
             }
-
-            btn.innerHTML = originalText;
+            btn.innerHTML = 'Save Product';
             btn.disabled = false;
         }
 
-        window.onload = () => {
-            initCharts();
-            loadDashboardData();
-        };
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
+        }
+
+        // Initial Load
+        window.onload = refreshData;
     </script>
 </body>
 </html>
