@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DecoTech Admin | Dashboard</title>
+    <title>DecoTech Admin | Final Premium Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -21,10 +21,9 @@
 
         body { font-family: 'Poppins', sans-serif; background-color: var(--bg-body); margin: 0; display: flex; }
 
-        /* Sidebar Style */
         .sidebar {
             width: 260px; height: 100vh; background: var(--sidebar-navy); color: white;
-            position: fixed; left: 0; top: 0; padding: 20px 0; z-index: 100;
+            position: fixed; left: 0; top: 0; padding: 20px 0; transition: 0.3s; z-index: 100;
         }
         .sidebar-brand { padding: 0 25px 30px; font-size: 24px; font-weight: 800; }
         .sidebar-brand span { color: var(--sky-blue); }
@@ -37,8 +36,7 @@
             color: var(--sky-blue); background: rgba(255,255,255,0.05); border-left: 4px solid var(--sky-blue); 
         }
 
-        /* Main Content */
-        .main-wrapper { margin-left: 260px; width: calc(100% - 260px); padding: 30px; }
+        .main-wrapper { margin-left: 260px; width: calc(100% - 260px); padding: 30px; transition: 0.3s; }
 
         .header-section {
             background: white; border-radius: 15px; padding: 20px 30px;
@@ -63,10 +61,9 @@
         .btn-add-new { background: var(--sidebar-navy); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; }
         .btn-add-new:hover { background: var(--sky-blue); }
 
-        .status-pill { padding: 4px 12px; border-radius: 30px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+        .status-pill { padding: 6px 15px; border-radius: 30px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
         .delivered { background: #dcfce7; color: #166534; }
         .pending { background: #fef3c7; color: #92400e; }
-        .cancelled { background: #fee2e2; color: #991b1b; }
 
         @media (max-width: 992px) {
             .sidebar { width: 80px; }
@@ -83,7 +80,7 @@
             <a href="#" class="nav-link-item active"><i class="fa fa-th-large"></i> <span>Dashboard</span></a>
             <a href="#" class="nav-link-item"><i class="fa fa-box"></i> <span>Products</span></a>
             <a href="#" class="nav-link-item"><i class="fa fa-shopping-cart"></i> <span>Orders</span></a>
-            <a href="#" class="nav-link-item text-danger mt-5" onclick="logout()"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="#" class="nav-link-item text-danger mt-5" onclick="handleLogout()"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
 
@@ -94,6 +91,10 @@
                 <button class="btn-add-new" data-bs-toggle="modal" data-bs-target="#addProductModal">
                     <i class="fa fa-plus me-2"></i> Add Product
                 </button>
+                <div class="text-end d-none d-md-block">
+                    <p class="m-0 fw-bold small">Elias Ahmed</p>
+                    <small class="text-muted" style="font-size: 11px;">Super Admin</small>
+                </div>
                 <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center fw-bold" style="width: 42px; height: 42px;">EA</div>
             </div>
         </div>
@@ -123,16 +124,31 @@
             <div class="col-md-3">
                 <div class="stat-card">
                     <div class="icon-circle bg-orange-light"><i class="fa fa-boxes"></i></div>
-                    <p class="text-muted small mb-1">Products</p>
+                    <p class="text-muted small mb-1">Total Products</p>
                     <h4 class="fw-bold" id="totalProducts">0</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="content-box">
+                    <h6 class="fw-bold mb-4">Revenue Growth (Weekly)</h6>
+                    <div style="height: 300px;"><canvas id="revenueChart"></canvas></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="content-box">
+                    <h6 class="fw-bold mb-4">Order Status</h6>
+                    <div style="height: 300px;"><canvas id="statusChart"></canvas></div>
                 </div>
             </div>
         </div>
 
         <div class="content-box">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h6 class="fw-bold m-0">Recent Orders (Real-time)</h6>
-                <button class="btn btn-sm btn-outline-dark" onclick="fetchOrders()">Refresh</button>
+                <h6 class="fw-bold m-0">Recent Orders</h6>
+                <button class="btn btn-sm btn-dark px-3" onclick="loadDashboardData()">Refresh</button>
             </div>
             <div class="table-responsive">
                 <table class="table align-middle">
@@ -142,13 +158,11 @@
                             <th>Customer</th>
                             <th>Amount</th>
                             <th>Status</th>
-                            <th>Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="ordersTableBody">
-                        <tr><td colspan="6" class="text-center py-4">Loading orders...</td></tr>
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -158,125 +172,193 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content" style="border-radius: 20px; border: none;">
                 <div class="modal-header border-0 p-4">
-                    <h5 class="fw-bold m-0">Add New Product</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="fw-bold m-0">Add New Product to Store</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4 pt-0">
                     <form id="productForm">
                         <div class="row g-3">
-                            <div class="col-md-6"><label class="form-label small fw-bold">Name</label><input type="text" id="pName" class="form-control" required></div>
-                            <div class="col-md-6"><label class="form-label small fw-bold">Category</label>
-                                <select id="pCategory" class="form-select"><option>Decor</option><option>Gadgets</option><option>Clothing</option></select>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Product Name</label>
+                                <input type="text" id="pName" class="form-control" placeholder="Enter product name" required>
                             </div>
-                            <div class="col-md-6"><label class="form-label small fw-bold">Price (€)</label><input type="number" id="pPrice" class="form-control" required></div>
-                            <div class="col-md-6"><label class="form-label small fw-bold">Stock</label><input type="number" id="pStock" class="form-control" value="10"></div>
-                            <div class="col-md-12"><label class="form-label small fw-bold">Image URL</label><input type="text" id="pImage" class="form-control"></div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Category</label>
+                                <select id="pCategory" class="form-select">
+                                    <option>Decor</option>
+                                    <option>Gadgets</option>
+                                    <option>Clothing</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">Price (€)</label>
+                                <input type="number" id="pPrice" class="form-control" placeholder="0.00" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">Stock Quantity</label>
+                                <input type="number" id="pStock" class="form-control" placeholder="Quantity" value="10">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">Discount (%)</label>
+                                <input type="number" id="pDiscount" class="form-control" placeholder="0">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label small fw-bold text-muted">Product Image URL</label>
+                                <input type="text" id="pImage" class="form-control" placeholder="Paste image link here">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label small fw-bold text-muted">Description</label>
+                                <textarea id="pDesc" class="form-control" rows="3" placeholder="Tell more about the product..."></textarea>
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer border-0 p-4 pt-0">
-                    <button type="button" id="saveBtn" class="btn btn-add-new w-100" onclick="saveProduct()">Save Product</button>
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="saveBtn" class="btn btn-add-new rounded-pill px-4" onclick="saveProduct()">Save Product</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // --- 1. Supabase Initialization ---
         const supabaseUrl = 'https://qxiofcydkujuxoiyvdlh.supabase.co';
-        const supabaseKey = 'sb_publishable_QOjefQ_1QCL6BGNkmAHn5w_bZBoLH-R'; // নিশ্চিত করুন এটি আপনার ANON KEY
+        const supabaseKey = 'sb_publishable_QOjefQ_1QCL6BGNkmAHn5w_bZBoLH-R'; 
         const supabase = supabasejs.createClient(supabaseUrl, supabaseKey);
 
-        // --- 2. Security: Check Login ---
-        if (localStorage.getItem('isLoggedIn') !== 'true') {
-            window.location.href = "login.html";
+        // Security Check
+        if(localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
         }
 
-        function logout() {
+        function handleLogout() {
             localStorage.removeItem('isLoggedIn');
-            window.location.href = "login.html";
+            window.location.href = 'login.html';
         }
 
-        // --- 3. Fetch Orders from Supabase ---
-        async function fetchOrders() {
-            const { data, error } = await supabase
+        // --- Charts Setup ---
+        function initCharts() {
+            const lineCtx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [1500, 2100, 1800, 3200, 2800, 4100, 4800],
+                        borderColor: '#00b4d8', backgroundColor: 'rgba(0, 180, 216, 0.1)',
+                        fill: true, tension: 0.4, borderWidth: 3
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const pieCtx = document.getElementById('statusChart').getContext('2d');
+            new Chart(pieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Delivered', 'Pending', 'Cancelled'],
+                    datasets: [{
+                        data: [70, 20, 10],
+                        backgroundColor: ['#00b4d8', '#fb8500', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
+            });
+        }
+
+        // --- Load Dashboard Data ---
+        async function loadDashboardData() {
+            // 1. Fetch Orders
+            const { data: orders, error: orderErr } = await supabase
                 .from('orders')
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            if (error) {
-                console.error('Error fetching orders:', error);
-                return;
+            if (!orderErr) {
+                const tableBody = document.getElementById('ordersTableBody');
+                tableBody.innerHTML = '';
+                let totalSales = 0;
+
+                orders.forEach(order => {
+                    totalSales += order.total_amount;
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td class="fw-semibold">#DT-${order.id.toString().slice(-4)}</td>
+                            <td>${order.customer_name}</td>
+                            <td class="fw-bold">€${order.total_amount}</td>
+                            <td><span class="status-pill ${order.status}">${order.status}</span></td>
+                            <td><button class="btn btn-sm btn-light border"><i class="fa fa-eye"></i></button></td>
+                        </tr>
+                    `;
+                });
+
+                document.getElementById('totalOrders').innerText = orders.length;
+                document.getElementById('totalSales').innerText = '€' + totalSales.toLocaleString();
+                
+                // Set of unique customers
+                const uniqueCustomers = new Set(orders.map(o => o.customer_name)).size;
+                document.getElementById('totalCustomers').innerText = uniqueCustomers;
             }
 
-            const tableBody = document.getElementById('ordersTableBody');
-            tableBody.innerHTML = '';
-
-            let totalSalesAmount = 0;
-            let customersSet = new Set();
-
-            data.forEach(order => {
-                totalSalesAmount += (order.total_amount || 0);
-                customersSet.add(order.customer_name);
-
-                const date = new Date(order.created_at).toLocaleDateString();
-                const statusClass = order.status === 'delivered' ? 'delivered' : 'pending';
-
-                tableBody.innerHTML += `
-                    <tr>
-                        <td class="fw-semibold">#DT-${order.id.toString().slice(-4)}</td>
-                        <td>${order.customer_name || 'Guest'}</td>
-                        <td class="fw-bold">€${order.total_amount}</td>
-                        <td><span class="status-pill ${statusClass}">${order.status}</span></td>
-                        <td>${date}</td>
-                        <td><button class="btn btn-sm btn-light border"><i class="fa fa-eye"></i></button></td>
-                    </tr>
-                `;
-            });
-
-            // Update Stats
-            document.getElementById('totalOrders').innerText = data.length;
-            document.getElementById('totalSales').innerText = '€' + totalSalesAmount.toLocaleString();
-            document.getElementById('totalCustomers').innerText = customersSet.size;
+            // 2. Fetch Total Products
+            const { count: productCount, error: prodErr } = await supabase
+                .from('products')
+                .select('*', { count: 'exact', head: true });
+            
+            if (!prodErr) {
+                document.getElementById('totalProducts').innerText = productCount;
+            }
         }
 
-        // --- 4. Fetch Other Stats (Products) ---
-        async function fetchProductCount() {
-            const { count, error } = await supabase.from('products').select('*', { count: 'exact', head: true });
-            if (!error) document.getElementById('totalProducts').innerText = count;
-        }
-
-        // --- 5. Save Product Function ---
+        // --- Save Product ---
         async function saveProduct() {
             const btn = document.getElementById('saveBtn');
-            btn.innerHTML = 'Saving...';
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
             btn.disabled = true;
 
             const name = document.getElementById('pName').value;
             const category = document.getElementById('pCategory').value;
             const price = document.getElementById('pPrice').value;
             const stock = document.getElementById('pStock').value;
+            const discount = document.getElementById('pDiscount').value || 0;
             const image = document.getElementById('pImage').value;
+            const description = document.getElementById('pDesc').value;
 
-            const { error } = await supabase.from('products').insert([
-                { name, category, price: parseInt(price), stock_quantity: parseInt(stock), image_url: image }
-            ]);
+            if(!name || !price) {
+                alert("Please fill name and price!");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            const { error } = await supabase.from('products').insert([{ 
+                name, category, price: parseInt(price), 
+                stock_quantity: parseInt(stock), discount: parseInt(discount),
+                image_url: image, description 
+            }]);
 
             if (error) {
                 alert("Error: " + error.message);
             } else {
-                alert("Product Added Successfully!");
-                location.reload();
+                alert("Success: Product added!");
+                document.getElementById('productForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+                loadDashboardData(); // Refresh counts
             }
+
+            btn.innerHTML = originalText;
             btn.disabled = false;
         }
 
-        // Initialize Page
         window.onload = () => {
-            fetchOrders();
-            fetchProductCount();
+            initCharts();
+            loadDashboardData();
         };
     </script>
 </body>
