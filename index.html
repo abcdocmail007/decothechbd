@@ -61,15 +61,16 @@
         /* Section Title */
         .section-title { font-family: 'Courier New', Courier, monospace; color: var(--deep-red); font-size: 60px; font-weight: 900; margin: 20px 0 50px; opacity: 0.8; }
 
-        /* Product Card - হুবহু আপনার ডিজাইন রাখা হয়েছে */
+        /* Product Card (Your Exact CSS) */
         .product-card { transition: 0.3s; border: none; }
         .img-container { 
             background: #f9f9f9; border-radius: 10px; padding: 40px 20px; 
-            position: relative; overflow: hidden; transition: 0.3s; height: 250px; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; transition: 0.3s; 
+            display: flex; align-items: center; justify-content: center; height: 250px;
         }
         .img-container img { max-height: 100%; object-fit: contain; }
         .product-card:hover .img-container { background: #f1f1f1; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .badge-sale { position: absolute; top: 15px; left: 15px; background: var(--deep-red); color: white; font-size: 10px; padding: 3px 8px; border-radius: 3px; font-weight: bold; z-index: 2; }
+        .badge-sale { position: absolute; top: 15px; left: 15px; background: var(--deep-red); color: white; font-size: 10px; padding: 3px 8px; border-radius: 3px; font-weight: bold; }
         
         .product-actions { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
@@ -84,17 +85,18 @@
         .price { color: var(--sky-blue); font-weight: 800; font-size: 15px; }
         .rating { color: #ffb703; font-size: 11px; margin-top: 5px; }
 
-        /* Testimonials & Footer */
+        /* Testimonials */
         .testi-heading { font-weight: 800; font-size: 32px; margin-bottom: 50px; color: #222; }
         .testi-card { border: 1px solid #eee; padding: 40px; border-radius: 10px; height: 100%; transition: 0.3s; background: #fff; }
         .testi-card:hover { border-color: var(--primary-orange); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+        /* Footer */
         footer { background: var(--dark-navy); color: #fff; padding: 80px 0 20px; }
         .footer-logo { font-size: 30px; font-weight: 800; margin-bottom: 25px; }
         .footer-logo span { color: var(--sky-blue); }
         .footer-link { display: block; color: #adb5bd; text-decoration: none; font-size: 13px; margin-bottom: 12px; transition: 0.3s; }
         .newsletter-container { background: rgba(255,255,255,0.03); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
         .news-input { background: rgba(255,255,255,0.1); border: none; padding: 12px 15px; border-radius: 4px; color: white; width: 100%; margin-bottom: 15px; font-size: 13px; outline: none;}
-        .news-btn { background: var(--sky-blue); color: white; width: 100%; border: none; padding: 12px; font-weight: 700; border-radius: 4px; transition: 0.3s; }
         .social-links a { width: 35px; height: 35px; background: rgba(255,255,255,0.1); color: #fff; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 10px; transition: 0.3s; text-decoration: none; }
         .wa-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 999; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; text-decoration: none; }
     </style>
@@ -127,12 +129,12 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Decor</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Gadgets</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Clothing</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="decor.html">Decor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gadgets.html">Gadgets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="clothing.html">Clothing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
                 </ul>
             </div>
             <div class="d-flex gap-4 fs-5 align-items-center">
@@ -194,7 +196,7 @@
 
     <section class="container text-center py-5">
         <h2 class="section-title" data-aos="fade-up">All Product</h2>
-        <div id="product-list" class="row g-4 mt-2">
+        <div id="product-container" class="row g-4 mt-2">
             </div>
     </section>
 
@@ -236,6 +238,7 @@
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="col-6 col-lg-2">
@@ -243,14 +246,20 @@
                     <a href="#" class="footer-link">Home</a>
                     <a href="#" class="footer-link">Shop</a>
                     <a href="#" class="footer-link">Decor</a>
+                    <a href="#" class="footer-link">Gadgets</a>
+                    <a href="#" class="footer-link">Clothing</a>
                 </div>
                 <div class="col-6 col-lg-2">
                     <h5 class="footer-head">Support</h5>
                     <a href="#" class="footer-link">Contact Us</a>
+                    <a href="#" class="footer-link">About Elias</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Shipping Info</a>
                     <a href="login.html" target="_blank" class="footer-link">Admin Login</a>
                 </div>
                 <div class="col-lg-4">
                     <h5 class="footer-head">Newsletter</h5>
+                    <p class="footer-link mb-4" style="color:#adb5bd">Subscribe to get special offers and once-in-a-lifetime deals.</p>
                     <div class="newsletter-container">
                         <input type="email" class="news-input" placeholder="Your Email Address">
                         <button class="news-btn">SUBSCRIBE NOW</button>
@@ -260,6 +269,9 @@
             <div class="row mt-5 pt-4 border-top border-secondary">
                 <div class="col-md-6 text-center text-md-start small text-secondary">
                     © 2026 DecoTech Store. All Rights Reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end small text-secondary">
+                    03/02/2026 | Rajshahi, BD
                 </div>
             </div>
         </div>
@@ -273,35 +285,34 @@
     <script>
         AOS.init({ duration: 1000, once: true });
 
-        // --- Supabase Setup ---
+        // --- Supabase Connection (আপনার ড্যাশবোর্ডের ডাটা এখানে দিন) ---
         const supabaseUrl = 'YOUR_SUPABASE_URL'; 
         const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function loadProducts() {
-            const productList = document.getElementById('product-list');
+        async function fetchProducts() {
+            const container = document.getElementById('product-container');
             
+            // ডাটাবেজ থেকে ডাটা আনা
             const { data: products, error } = await _supabase
                 .from('products')
                 .select('*')
                 .order('id', { ascending: false });
 
             if (error) {
-                console.error("Error fetching products:", error);
+                console.error("Error loading products:", error);
                 return;
             }
 
-            productList.innerHTML = ''; 
+            container.innerHTML = ''; // ক্লিয়ার করা
 
             products.forEach((product, index) => {
-                // Discount এবং Price আপনার ডাটাবেজের কলাম অনুযায়ী (Capital Letter)
-                const discount = product.Discount || 0;
-                
-                productList.innerHTML += `
+                // আপনার হুবহু HTML ডিজাইন এবং আপনার ডাটাবেজ কলামের নাম ব্যবহার করা হয়েছে
+                container.innerHTML += `
                     <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="${index * 100}">
                         <div class="product-card">
                             <div class="img-container">
-                                ${discount > 0 ? `<span class="badge-sale">${discount}% OFF</span>` : ''}
+                                ${product.Discount > 0 ? `<span class="badge-sale">${product.Discount}%</span>` : ''}
                                 <img src="${product.image_url || 'https://via.placeholder.com/150'}" class="img-fluid">
                                 <div class="product-actions">
                                     <div class="p-action-icon"><i class="fa fa-heart"></i></div>
@@ -322,8 +333,8 @@
             });
         }
 
-        // পেজ লোড হওয়ার সাথে সাথে প্রোডাক্টগুলো নিয়ে আসবে
-        window.onload = loadProducts;
+        // পেজ লোড হলে রান হবে
+        window.onload = fetchProducts;
     </script>
 </body>
 </html>
