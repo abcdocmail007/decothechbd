@@ -182,7 +182,7 @@
                         </tr>
                     </thead>
                     <tbody id="productsTableBody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -275,18 +275,15 @@
         let revChart, statChart;
         const productModal = new bootstrap.Modal(document.getElementById('addProductModal'));
 
-        // --- Data Loading Logic ---
         async function refreshData() {
             const { data: products, error: pError } = await _supabase.from('products').select('*').order('id', { ascending: false });
             const { data: orders, error: oError } = await _supabase.from('orders').select('*').order('created_at', { ascending: false });
 
             if (pError || oError) return;
 
-            // Update Stats
             document.getElementById('totalProducts').innerText = products.length;
             document.getElementById('totalOrders').innerText = orders.length;
 
-            // Render Products Table
             const pTableBody = document.getElementById('productsTableBody');
             pTableBody.innerHTML = '';
             products.forEach(p => {
@@ -300,8 +297,8 @@
                         </td>
                         <td><span class="badge bg-light text-dark">${p.category}</span></td>
                         <td class="fw-bold">€${p.price}</td>
-                        <td>${p.Stock_Quantity}</td>
-                        <td class="text-success">${p.Discount}% Off</td>
+                        <td>${p.Stock_Quantity || 0}</td>
+                        <td class="text-success">${p.Discount || 0}% Off</td>
                         <td>
                             <div class="btn-group">
                                 <button class="btn btn-sm btn-light text-primary" onclick='openEditModal(${JSON.stringify(p)})'><i class="fa fa-edit"></i></button>
@@ -312,7 +309,6 @@
                 `;
             });
 
-            // Render Orders Table
             let totalSales = 0;
             const oTableBody = document.getElementById('ordersTableBody');
             oTableBody.innerHTML = '';
@@ -336,7 +332,6 @@
             initCharts(15, 8, 3);
         }
 
-        // --- Modal Control ---
         function openAddModal() {
             document.getElementById('modalTitle').innerText = "Add New Product";
             document.getElementById('productForm').reset();
@@ -357,11 +352,11 @@
             productModal.show();
         }
 
-        // --- CRUD Actions ---
         async function saveProduct() {
             const btn = document.getElementById('saveBtn');
             const id = document.getElementById('editProductId').value;
             
+            // ডাটাবেস কলামের নাম অনুযায়ী ম্যাপিং ঠিক করা হয়েছে
             const productData = {
                 name: document.getElementById('pName').value,
                 category: document.getElementById('pCategory').value,
@@ -373,24 +368,28 @@
             };
 
             btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
+
             try {
                 let error;
                 if(id) {
-                    const result = await _supabase.from('products').update(productData).eq('id', id);
-                    error = result.error;
+                    const res = await _supabase.from('products').update(productData).eq('id', id);
+                    error = res.error;
                 } else {
-                    const result = await _supabase.from('products').insert([productData]);
-                    error = result.error;
+                    const res = await _supabase.from('products').insert([productData]);
+                    error = res.error;
                 }
 
                 if (error) throw error;
-                alert(id ? "Updated successfully!" : "Added successfully!");
+                alert(id ? "Product updated successfully!" : "Product added successfully!");
                 productModal.hide();
                 refreshData();
             } catch (err) {
+                console.error(err);
                 alert("Action failed: " + err.message);
             } finally {
                 btn.disabled = false;
+                btn.innerText = "Save Product";
             }
         }
 
@@ -405,7 +404,6 @@
             }
         }
 
-        // --- Charts & Helpers ---
         function initCharts(delivered, pending, cancelled) {
             const lineCtx = document.getElementById('revenueChart').getContext('2d');
             if(revChart) revChart.destroy();
